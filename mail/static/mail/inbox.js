@@ -58,7 +58,12 @@ function load_mailbox(mailbox) {
       document.querySelector('#emails-view').append(ul);
     emails.forEach(email => {
       const div = document.createElement('div');
-      div.classList.add('div');
+      if(email.read === true){
+        div.classList.add('div-read');
+      }
+      else{
+        div.classList.add('div-unread');
+      }
       const sender = document.createElement('li');
       const subject = document.createElement('li');
       const timestamp = document.createElement('li');
@@ -71,7 +76,7 @@ function load_mailbox(mailbox) {
       div.append(sender);
       div.append(subject);
       div.append(timestamp);
-      div.addEventListener('click', () => load_email(email.id));
+      div.addEventListener('click', () => load_email(email.id, 'archivable'));
     });
   });
   }
@@ -85,7 +90,7 @@ function load_mailbox(mailbox) {
       document.querySelector('#emails-view').append(ul);
     emails.forEach(email => {
       const div = document.createElement('div');
-      div.classList.add('div');
+      div.classList.add('div-unread');
       const recipients = document.createElement('li');
       const subject = document.createElement('li');
       const timestamp = document.createElement('li');
@@ -98,7 +103,7 @@ function load_mailbox(mailbox) {
       div.append(recipients);
       div.append(subject);
       div.append(timestamp);
-      div.addEventListener('click', () => load_email(email.id));
+      div.addEventListener('click', () => load_email(email.id, 'un-archivable'));
     });
     });
   }
@@ -113,7 +118,12 @@ function load_mailbox(mailbox) {
       document.querySelector('#emails-view').append(ul);
     emails.forEach(email => {
       const div = document.createElement('div');
-      div.classList.add('div');
+      if(email.read === true){
+        div.classList.add('div-read');
+      }
+      else{
+        div.classList.add('div-unread');
+      }
       const sender = document.createElement('li');
       const subject = document.createElement('li');
       const timestamp = document.createElement('li');
@@ -126,13 +136,13 @@ function load_mailbox(mailbox) {
       div.append(sender);
       div.append(subject);
       div.append(timestamp);
-      div.addEventListener('click', () => load_email(email.id));
+      div.addEventListener('click', () => load_email(email.id, 'archivable'));
     });
   });
   }
 }
 
-function load_email(email_id){
+function load_email(email_id, arr){
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
@@ -165,6 +175,27 @@ function load_email(email_id){
     ul.append(timestamp);
     ul.append(reply);
 
+    if( arr === 'archivable'){
+      const archive = document.createElement('button');
+      const archived = document.createElement('button');
+
+      archive.innerHTML = 'Archive';
+      archived.innerHTML = 'Unarchive';
+
+      archive.classList.add('button');
+      archived.classList.add('button');
+
+      if(email.archived){
+        ul.append(archived);
+      } else {
+        ul.append(archive);
+      }
+
+      archive.addEventListener('click', () => archive_email(email.id));
+      archived.addEventListener('click', () => unarchive_email(email.id));
+
+    }
+
     const hr = document.createElement('hr');
     ul.append(hr);
 
@@ -174,4 +205,31 @@ function load_email(email_id){
 
   })
 
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      read:true
+    })
+  } )
+
+}
+
+function archive_email(email_id){
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived:true
+    })
+  })
+ load_mailbox('archive');
+}
+
+function unarchive_email(email_id){
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived:false
+    })
+  })
+  load_mailbox('inbox');
 }
