@@ -31,9 +31,11 @@ function compose_email() {
       console.log(result);
     });
 
-    return false;
-  }
+    load_mailbox('sent');
 
+    return false;
+
+  }
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
@@ -196,6 +198,8 @@ function load_email(email_id, arr){
 
     }
 
+    reply.addEventListener('click', () => Reply(email.sender, email.subject, email.timestamp, email.body));
+
     const hr = document.createElement('hr');
     ul.append(hr);
 
@@ -232,4 +236,41 @@ function unarchive_email(email_id){
     })
   })
   load_mailbox('inbox');
+}
+
+function Reply(email_sender, email_subject, email_timestamp, email_body) {
+
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+  const recipient = document.querySelector('#compose-recipients');
+  recipient.value = email_sender;
+
+  const subject = document.querySelector('#compose-subject');
+  subject.value = `Re: ${email_subject}`;
+
+  const body = document.querySelector('#compose-body');
+  body.value = `On ${email_timestamp} ${email_sender} wrote: ${email_body}`;
+
+
+
+  //composing the mail
+  document.querySelector('#compose-form').onsubmit = () => {
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+        recipients: recipient.value,
+        subject: document.querySelector('#compose-subject').value,
+        body: document.querySelector('#compose-body').value
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result);
+    });
+
+    load_mailbox('sent');
+
+    return false;
+  }
 }

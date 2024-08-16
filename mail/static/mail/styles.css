@@ -36,3 +36,20 @@ textarea {
     justify-content: space-between;
     align-items:center;
 }
+
+
+.button{
+    color:#007BFF;
+    background-color: white;
+    border: 1px solid #007BFF;
+    border-radius: 3px;
+    margin-right:5px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:17px;
+}
+
+.button:hover{
+    color:white;
+    background-color: #007BFF;
+    border: 1px solid white;
+}
