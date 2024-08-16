@@ -1,0 +1,27 @@
+textarea {
+    min-height: 400px;
+}
+
+.ul{
+    list-style-type: none;
+}
+
+.div{
+    color:black; 
+    border: 1px solid black; 
+    margin:0px; 
+    padding:5px;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+}
+
+.sender{
+    margin-right:20px;
+    font-weight:bold;
+}
+
+.timestamp {
+    margin-right:0;
+    margin-left:auto;
+}
