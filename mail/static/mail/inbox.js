@@ -28,7 +28,6 @@ function compose_email() {
     })
     .then(response => response.json())
     .then(result => {
-      console.log(result);
     });
 
     load_mailbox('sent');
@@ -266,7 +265,6 @@ function Reply(email_sender, email_subject, email_timestamp, email_body) {
     })
     .then(response => response.json())
     .then(result => {
-      console.log(result);
     });
 
     load_mailbox('sent');
